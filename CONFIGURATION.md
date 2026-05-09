@@ -75,7 +75,7 @@ keybindings live under `[keys]`.
 supported syntax:
 - plain keys: `n`, `x`, `-`, `` ` ``
 - modifiers: `ctrl+b`, `shift+n`, `alt+x`
-- special keys: `enter`, `esc`, `tab`, `backspace`, `left`, `right`, `up`, `down`
+- special keys: `enter`, `esc`, `tab`, `backspace`, `left`, `right`, `up`, `down`, `pageup`, `pagedown`
 - function keys: `f1`, `f12`
 - uppercase letters also imply shift: `D` works like `shift+d`
 

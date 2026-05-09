@@ -704,6 +704,8 @@ pub fn format_key_combo(binding: (KeyCode, KeyModifiers)) -> String {
         KeyCode::Right => "right".to_string(),
         KeyCode::Up => "up".to_string(),
         KeyCode::Down => "down".to_string(),
+        KeyCode::PageUp => "pageup".to_string(),
+        KeyCode::PageDown => "pagedown".to_string(),
         KeyCode::F(n) => format!("f{n}"),
         _ => format!("{:?}", code).to_lowercase(),
     };
@@ -754,6 +756,8 @@ pub(super) fn parse_key_combo(s: &str) -> Option<(KeyCode, KeyModifiers)> {
         "right" => KeyCode::Right,
         "up" => KeyCode::Up,
         "down" => KeyCode::Down,
+        "pageup" => KeyCode::PageUp,
+        "pagedown" => KeyCode::PageDown,
         s if s.len() == 1 => {
             let ch = key_str.chars().next().unwrap();
             if ch.is_ascii_uppercase() {
@@ -846,6 +850,26 @@ mod tests {
         assert_eq!(
             parse_key_combo("f5"),
             Some((KeyCode::F(5), KeyModifiers::empty()))
+        );
+    }
+
+    #[test]
+    fn parse_page_keys() {
+        assert_eq!(
+            parse_key_combo("pageup"),
+            Some((KeyCode::PageUp, KeyModifiers::empty()))
+        );
+        assert_eq!(
+            parse_key_combo("pagedown"),
+            Some((KeyCode::PageDown, KeyModifiers::empty()))
+        );
+        assert_eq!(
+            parse_key_combo("ctrl+pagedown"),
+            Some((KeyCode::PageDown, KeyModifiers::CONTROL))
+        );
+        assert_eq!(
+            format_key_combo((KeyCode::PageDown, KeyModifiers::CONTROL)),
+            "ctrl+pagedown"
         );
     }
 
