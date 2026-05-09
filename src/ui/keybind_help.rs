@@ -111,6 +111,10 @@ pub(super) fn keybind_help_groups(
             optional_keybind_label(&kb.focus_pane_right_label),
             "focus pane right",
         ),
+        (
+            optional_keybind_label(&kb.next_blocked_pane_label),
+            "jump to next blocked pane",
+        ),
     ];
     groups.push(("panes", panes));
 

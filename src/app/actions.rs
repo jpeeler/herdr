@@ -397,6 +397,79 @@ impl AppState {
         self.agent_panel_scroll = self.agent_panel_scroll.min(max_scroll);
     }
 
+    /// Cycle to the next pane that is blocked on user input across all
+    /// workspaces and tabs. Returns true if a blocked pane was found and
+    /// focused.
+    pub fn jump_to_next_blocked_pane(&mut self) -> bool {
+        if self.workspaces.is_empty() {
+            return false;
+        }
+
+        let active_ws_idx = self.active.unwrap_or(0).min(self.workspaces.len() - 1);
+        let active_tab_idx = self
+            .workspaces
+            .get(active_ws_idx)
+            .map(|ws| ws.active_tab)
+            .unwrap_or(0);
+
+        let mut search: Vec<(usize, usize, PaneId)> = Vec::new();
+        for (ws_offset, _) in self.workspaces.iter().enumerate() {
+            let ws_idx = (active_ws_idx + ws_offset) % self.workspaces.len();
+            let ws = &self.workspaces[ws_idx];
+            if ws.tabs.is_empty() {
+                continue;
+            }
+            for tab_offset in 0..ws.tabs.len() {
+                let tab_idx = if ws_idx == active_ws_idx {
+                    (active_tab_idx + tab_offset) % ws.tabs.len()
+                } else {
+                    tab_offset
+                };
+                let tab = &ws.tabs[tab_idx];
+                if let Some(pane_id) = tab
+                    .panes
+                    .iter()
+                    .find(|(_, state)| state.state == AgentState::Blocked)
+                    .map(|(id, _)| *id)
+                {
+                    search.push((ws_idx, tab_idx, pane_id));
+                }
+            }
+        }
+
+        if search.is_empty() {
+            return false;
+        }
+
+        let current = (active_ws_idx, active_tab_idx);
+        let target = search
+            .iter()
+            .find(|(ws_idx, tab_idx, _)| (*ws_idx, *tab_idx) != current)
+            .copied()
+            .unwrap_or(search[0]);
+
+        let (target_ws, target_tab, target_pane) = target;
+
+        if target_ws != active_ws_idx {
+            if let Some(ws) = self.workspaces.get_mut(target_ws) {
+                ws.active_tab = target_tab.min(ws.tabs.len().saturating_sub(1));
+            }
+            self.switch_workspace(target_ws);
+        } else if target_tab != active_tab_idx {
+            self.switch_tab(target_tab);
+        }
+
+        if let Some(tab) = self
+            .workspaces
+            .get_mut(target_ws)
+            .and_then(|ws| ws.tabs.get_mut(target_tab))
+        {
+            tab.layout.focus_pane(target_pane);
+        }
+
+        true
+    }
+
     pub fn close_selected_workspace(&mut self) {
         if self.workspaces.is_empty() {
             return;

@@ -97,6 +97,8 @@ pub struct Keybinds {
     pub focus_pane_up_label: Option<String>,
     pub focus_pane_right: Option<(KeyCode, KeyModifiers)>,
     pub focus_pane_right_label: Option<String>,
+    pub next_blocked_pane: Option<(KeyCode, KeyModifiers)>,
+    pub next_blocked_pane_label: Option<String>,
     pub split_vertical: (KeyCode, KeyModifiers),
     pub split_vertical_label: String,
     pub split_horizontal: (KeyCode, KeyModifiers),
@@ -435,6 +437,12 @@ impl Config {
                 &self.keys.focus_pane_right,
                 &mut diagnostics,
             ),
+            optional_binding(
+                BindingScope::TerminalDirect,
+                "keys.next_blocked_pane",
+                &self.keys.next_blocked_pane,
+                &mut diagnostics,
+            ),
         ];
 
         let mut registry = BindingRegistry::default();
@@ -650,6 +658,8 @@ impl Config {
             focus_pane_up_label: optional_bindings[14].label.clone(),
             focus_pane_right: optional_bindings[15].value,
             focus_pane_right_label: optional_bindings[15].label.clone(),
+            next_blocked_pane: optional_bindings[16].value,
+            next_blocked_pane_label: optional_bindings[16].label.clone(),
             split_vertical: bindings[4].value,
             split_vertical_label: bindings[4].label.clone(),
             split_horizontal: bindings[5].value,

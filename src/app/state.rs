@@ -927,6 +927,8 @@ impl AppState {
                 focus_pane_up_label: None,
                 focus_pane_right: None,
                 focus_pane_right_label: None,
+                next_blocked_pane: Some((KeyCode::Char('a'), KeyModifiers::ALT)),
+                next_blocked_pane_label: Some("alt+a".into()),
                 split_vertical: (KeyCode::Char('v'), KeyModifiers::empty()),
                 split_vertical_label: "v".into(),
                 split_horizontal: (KeyCode::Char('-'), KeyModifiers::empty()),

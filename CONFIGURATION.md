@@ -113,6 +113,7 @@ focus_pane_left = "alt+h"
 focus_pane_down = "alt+j"
 focus_pane_up = "alt+k"
 focus_pane_right = "alt+l"
+next_blocked_pane = "alt+a"
 ```
 
 ### key reference
@@ -139,6 +140,7 @@ focus_pane_right = "alt+l"
 | `focus_pane_down` | unset | focus the pane below directly from terminal mode |
 | `focus_pane_up` | unset | focus the pane above directly from terminal mode |
 | `focus_pane_right` | unset | focus the pane to the right directly from terminal mode |
+| `next_blocked_pane` | `alt+a` | jump to the next pane blocked on user input, cycling across all workspaces and tabs |
 | `split_vertical` | `v` | split pane vertically (side by side) |
 | `split_horizontal` | `-` | split pane horizontally (stacked) |
 | `close_pane` | `x` | close focused pane |

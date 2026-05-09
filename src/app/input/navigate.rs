@@ -78,6 +78,12 @@ pub(crate) fn terminal_direct_navigation_action(
     {
         return Some(NavigateAction::FocusPaneRight);
     }
+    if kb
+        .next_blocked_pane
+        .is_some_and(|(code, mods)| key_matches(key, code, mods))
+    {
+        return Some(NavigateAction::NextBlockedPane);
+    }
     None
 }
 
@@ -387,6 +393,7 @@ pub(crate) enum NavigateAction {
     FocusPaneDown,
     FocusPaneUp,
     FocusPaneRight,
+    NextBlockedPane,
     SplitVertical,
     SplitHorizontal,
     ClosePane,
@@ -502,6 +509,12 @@ fn navigate_action_for_key(state: &AppState, key: &KeyEvent) -> Option<NavigateA
     {
         return Some(NavigateAction::Detach);
     }
+    if kb
+        .next_blocked_pane
+        .is_some_and(|(code, mods)| key_matches(key, code, mods))
+    {
+        return Some(NavigateAction::NextBlockedPane);
+    }
     None
 }
 
@@ -569,6 +582,11 @@ pub(super) fn execute_navigate_action(state: &mut AppState, action: NavigateActi
         NavigateAction::FocusPaneDown => state.navigate_pane(NavDirection::Down),
         NavigateAction::FocusPaneUp => state.navigate_pane(NavDirection::Up),
         NavigateAction::FocusPaneRight => state.navigate_pane(NavDirection::Right),
+        NavigateAction::NextBlockedPane => {
+            if state.jump_to_next_blocked_pane() {
+                leave_navigate_mode(state);
+            }
+        }
         NavigateAction::SplitVertical => {
             state.split_pane(Direction::Horizontal);
             leave_navigate_mode(state);
