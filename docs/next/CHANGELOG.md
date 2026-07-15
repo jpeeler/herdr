@@ -119,6 +119,7 @@
 ### Added
 - Added `[update].version_check` and `[update].manifest_check` so background Herdr version checks and remote agent-detection manifest checks can be disabled independently. Manual `herdr update` and bundled/local detection manifests still work when the background checks are disabled. (#677)
 - Added `HERDR_AGENT=<agent>` as a Linux foreground-process hint for agents hidden behind wrappers such as VMs, Bubblewrap, or `fence`, allowing Herdr to use the named agent's screen manifest when `/proc` cannot expose the real command. (#679)
+- Extended the `HERDR_AGENT=<agent>` foreground-process hint to macOS, so agents hidden behind wrappers such as VMs, sandboxes, or supervisors can declare which agent Herdr should use when the host process list only exposes the wrapper.
 - Added `ui.pane_borders` and `ui.pane_gaps` to make split pane dividers and spacing configurable. (#271)
 
 ### Changed
